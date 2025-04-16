@@ -13,9 +13,10 @@ origins = [
     "*",  # В продакшене заменить на URL расширения или фронта
 ]
 
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # или ["chrome-extension://<your-extension-id>"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
