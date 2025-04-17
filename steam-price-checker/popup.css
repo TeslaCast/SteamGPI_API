@@ -1,59 +1,69 @@
 body {
   background-color: #1b1f23;
   color: #d4d7dc;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, sans-serif;
   margin: 0;
   padding: 0;
-  width: 350px; /* Фиксированная ширина */
-  height: 500px; /* Фиксированная высота */
+  width: 500px; /* Увеличили ширину */
+  min-height: 400px; /* Минимальная высота */
 }
 
 .container {
   background-color: #2c2f33;
   border-radius: 16px;
-  padding: 1rem;
+  padding: 1.5rem;
   box-sizing: border-box;
   height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 h1 {
-  color: #c7cacf;
+  color: #ffffff;
   text-align: center;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1.5rem 0;
   padding: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-#table-container {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 .table {
   display: grid;
-  grid-template-columns: minmax(80px, 1fr) repeat(3, minmax(70px, 1fr));
-  gap: 0.5rem;
-  overflow-y: auto;
-  padding-right: 0.2rem;
-  flex: 1;
+  grid-template-columns: 120px repeat(3, 1fr); /* Фиксированная ширина для региона */
+  gap: 0.8rem;
+  width: 100%;
 }
 
 .cell {
-  padding: 0.5rem;
+  padding: 0.8rem;
   background-color: #36393f;
   border-radius: 8px;
-  font-size: 0.85rem;
-  text-align: left;
-  white-space: nowrap;
+  font-size: 0.95rem;
+  text-align: center;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Остальные стили .cell остаются без изменений */
+.cell.header {
+  background-color: #23272a;
+  font-weight: bold;
+  color: #b9bbbe;
+  letter-spacing: 0.05em;
+}
+
+.cell.region {
+  text-align: left; /* Выравниваем регионы по левому краю */
+  font-weight: 500;
+}
+
+.cell.price {
+  font-family: 'Courier New', monospace; /* Для лучшей читаемости цен */
+}
+
+.cell.discount {
+  color: #43b581;
+  font-weight: bold;
+}
+
+.row:nth-child(even) .cell {
+  background-color: #3a3e45;
+}

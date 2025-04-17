@@ -22,7 +22,7 @@ async function fetchData(appid) {
 function renderTable(gameData) {
   if (!Array.isArray(gameData)) {
     document.getElementById("table-container").innerHTML = 
-      `<div class="loading">❌ Нет данных для отображения</div>`;
+      '<div class="loading">❌ Нет данных для отображения</div>';
     return;
   }
 
@@ -31,18 +31,26 @@ function renderTable(gameData) {
 
   const rows = gameData.map(region => `
     <div class="row">
-      <div class="cell region">${region.region}</div>
-      <div class="cell price">${region.initial_price ?? 'N/A'} ${region.currency}</div>
-      <div class="cell price">${region.final_price ?? 'N/A'} ${region.currency}</div>
-      <div class="cell discount">${region.discount_percent ? region.discount_percent + '%' : '-'}</div>
+      <div class="cell region" title="${region.region}">
+        ${region.region}
+      </div>
+      <div class="cell price" title="${region.initial_price ?? 'N/A'} ${region.currency}">
+        ${region.initial_price ?? 'N/A'} ${region.currency}
+      </div>
+      <div class="cell price" title="${region.final_price ?? 'N/A'} ${region.currency}">
+        ${region.final_price ?? 'N/A'} ${region.currency}
+      </div>
+      <div class="cell discount">
+        ${region.discount_percent ? region.discount_percent + '%' : '-'}
+      </div>
     </div>
   `).join("");
 
   document.getElementById("table-container").innerHTML = `
     <div class="table">
       <div class="cell header">Регион</div>
-      <div class="cell header">Обычная</div>
-      <div class="cell header">Со скидкой</div>
+      <div class="cell header">Обычная цена</div>
+      <div class="cell header">Цена со скидкой</div>
       <div class="cell header">Скидка</div>
       ${rows}
     </div>
