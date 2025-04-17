@@ -1,18 +1,18 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-import os
+from sqlalchemy.orm import sessionmaker, Session, declarative_base
+from config import settings
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/SteamGPI_API")
-
-# Create the engine for connecting to the database without check_same_thread
-engine = create_engine(DATABASE_URL)
-
-# Create the database using SQLAlchemy
-Base = declarative_base()
+# Create the engine for connecting to the database
+print(settings.DATABASE_URL_psycopg)
+engine = create_engine(
+    settings.DATABASE_URL_psycopg,
+)
 
 # Session for communicating with the DB
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Base class for declarative models
+Base = declarative_base()
 
 # Function to get a session
 def get_db():

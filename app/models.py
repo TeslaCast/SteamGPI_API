@@ -9,8 +9,6 @@ class Game(Base):
     appid = Column(Integer, primary_key=True, index=True)  # Use appid as the primary key
     data = Column(JSONB)
     updated_at = Column(DateTime, default=datetime.utcnow)
-    #region = Column(String, index=True)  # Keep the region column остановились на реализации большого jsonb 
-
 
     __table_args__ = (
         UniqueConstraint("appid", name="uix_appid"),

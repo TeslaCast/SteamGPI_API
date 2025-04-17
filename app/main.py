@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from . import routes
+from app.routes import routes
 
 app = FastAPI(
     title="Steam GeoPricing Inspector API",
