@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session, declarative_base
-from config import settings
+from app.config import settings
 
 # Create the engine for connecting to the database
 print(settings.DATABASE_URL_psycopg)
