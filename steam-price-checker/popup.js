@@ -1,27 +1,62 @@
-// popup.js
-
-async function getPrices(appid) {
-    const res = await fetch(`http://localhost:8000/game/${appid}`);
-    const data = await res.json();
-  
-    const container = document.getElementById("prices");
-    container.innerHTML = "";
-  
-    data.forEach(regionInfo => {
-      const block = document.createElement("div");
-      block.className = "region-block";
-      block.innerHTML = `
-        <strong>${regionInfo.region}</strong>: ${regionInfo.final_price ?? "N/A"} ${regionInfo.currency ?? ""}
-      `;
-      container.appendChild(block);
+async function getAppId() {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ type: "getAppId" }, (response) => {
+      resolve(response?.appid || null);
     });
+  });
+}
+
+async function fetchData(appid) {
+  const url = `http://localhost:8000/game/${appid}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Ошибка при получении данных");
+    return await res.json();
+  } catch (err) {
+    document.getElementById("table-container").innerHTML = 
+      `<div class="loading">⚠️ ${err.message}</div>`;
+    return null;
+  }
+}
+
+function renderTable(gameData) {
+  if (!Array.isArray(gameData)) {
+    document.getElementById("table-container").innerHTML = 
+      `<div class="loading">❌ Нет данных для отображения</div>`;
+    return;
+  }
+
+  const gameName = gameData[0]?.name || "Неизвестная игра";
+  document.getElementById("game-title").textContent = gameName;
+
+  const rows = gameData.map(region => `
+    <div class="row">
+      <div class="cell region">${region.region}</div>
+      <div class="cell price">${region.initial_price ?? 'N/A'} ${region.currency}</div>
+      <div class="cell price">${region.final_price ?? 'N/A'} ${region.currency}</div>
+      <div class="cell discount">${region.discount_percent ? region.discount_percent + '%' : '-'}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("table-container").innerHTML = `
+    <div class="table">
+      <div class="cell header">Регион</div>
+      <div class="cell header">Обычная</div>
+      <div class="cell header">Со скидкой</div>
+      <div class="cell header">Скидка</div>
+      ${rows}
+    </div>
+  `;
+}
+
+(async () => {
+  const appid = await getAppId();
+  if (!appid) {
+    document.getElementById("table-container").innerHTML = 
+      `<div class="loading">❌ Откройте страницу игры в Steam</div>`;
+    return;
   }
   
-  chrome.runtime.sendMessage({ type: "getAppId" }, (response) => {
-    if (response?.appid) {
-      getPrices(response.appid);
-    } else {
-      document.getElementById("prices").innerText = "AppID не найден на странице.";
-    }
-  });
-  
+  const data = await fetchData(appid);
+  if (data) renderTable(data);
+})();
