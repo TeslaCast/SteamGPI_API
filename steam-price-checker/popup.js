@@ -20,39 +20,50 @@ async function fetchData(appid) {
 }
 
 function renderTable(gameData) {
-  if (!Array.isArray(gameData)) {
+  if (!Array.isArray(gameData) || gameData.length === 0) {
     document.getElementById("table-container").innerHTML = 
       '<div class="loading">❌ Нет данных для отображения</div>';
     return;
   }
 
+  const formatPrice = (price, currency) => {
+    if (price === null || price === undefined) return 'N/A';
+    const num = parseFloat(price);
+    if (isNaN(num)) return 'N/A';
+    
+    if (currency === 'USD' || currency === 'EUR') {
+      return `${currency} ${num.toFixed(2)}`;
+    }
+    return `${num.toFixed(2)} ${currency}`;
+  };
+
   const gameName = gameData[0]?.name || "Неизвестная игра";
   document.getElementById("game-title").textContent = gameName;
 
   const rows = gameData.map(region => `
-    <div class="row">
-      <div class="cell region" title="${region.region}">
-        ${region.region}
-      </div>
-      <div class="cell price" title="${region.initial_price ?? 'N/A'} ${region.currency}">
-        ${region.initial_price ?? 'N/A'} ${region.currency}
-      </div>
-      <div class="cell price" title="${region.final_price ?? 'N/A'} ${region.currency}">
-        ${region.final_price ?? 'N/A'} ${region.currency}
-      </div>
-      <div class="cell discount">
-        ${region.discount_percent ? region.discount_percent + '%' : '-'}
-      </div>
-    </div>
+    <tr>
+      <td>${region.region}</td>
+      <td class="price">${formatPrice(region.initial_price, region.currency)}</td>
+      <td class="price">${formatPrice(region.final_price, region.currency)}</td>
+      <td class="discount">${region.discount_percent ? region.discount_percent + '%' : '0%'}</td>
+    </tr>
   `).join("");
 
   document.getElementById("table-container").innerHTML = `
-    <div class="table">
-      <div class="cell header">Регион</div>
-      <div class="cell header">Обычная цена</div>
-      <div class="cell header">Цена со скидкой</div>
-      <div class="cell header">Скидка</div>
-      ${rows}
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Регион</th>
+            <th>Обычная цена</th>
+            <th>Цена со скидкой</th>
+            <th>Скидка</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+        </tbody>
+      </table>
     </div>
   `;
 }
