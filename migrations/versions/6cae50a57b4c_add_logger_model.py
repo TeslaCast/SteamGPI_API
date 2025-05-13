@@ -1,8 +1,8 @@
-"""initial migration with models import
+"""Add Logger model
 
-Revision ID: 642e40046259
+Revision ID: 6cae50a57b4c
 Revises: 
-Create Date: 2025-05-13 18:16:59.449341
+Create Date: 2025-05-13 20:59:55.533049
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '642e40046259'
+revision: str = '6cae50a57b4c'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,10 +24,17 @@ def upgrade() -> None:
     sa.Column('appid', sa.Integer(), nullable=False),
     sa.Column('data', sa.JSON(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.PrimaryKeyConstraint('appid'),
-    sa.UniqueConstraint('appid', name='uix_appid')
+    sa.PrimaryKeyConstraint('appid')
     )
     op.create_index(op.f('ix_games_appid'), 'games', ['appid'], unique=False)
+    op.create_table('loggers',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('level', sa.String(), nullable=False),
+    sa.Column('message', sa.String(), nullable=False),
+    sa.Column('timestamp', sa.DateTime(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_loggers_id'), 'loggers', ['id'], unique=False)
     op.create_table('users',
     sa.Column('userid', sa.Integer(), nullable=False),
     sa.Column('login', sa.String(), nullable=False),
@@ -55,6 +62,8 @@ def downgrade() -> None:
     op.drop_table('alerts')
     op.drop_index(op.f('ix_users_userid'), table_name='users')
     op.drop_table('users')
+    op.drop_index(op.f('ix_loggers_id'), table_name='loggers')
+    op.drop_table('loggers')
     op.drop_index(op.f('ix_games_appid'), table_name='games')
     op.drop_table('games')
     # ### end Alembic commands ###

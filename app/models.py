@@ -9,9 +9,6 @@ class Game(Base):
     data = Column(JSON)  # Changed from JSONB to JSON
     updated_at = Column(DateTime, default=datetime.utcnow)
 
-    __table_args__ = (
-        UniqueConstraint("appid", name="uix_appid"),
-    )
 
 class User(Base):
     __tablename__ = "users"
@@ -27,3 +24,11 @@ class Alert(Base):
     userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
     appid = Column(Integer, ForeignKey("games.appid"), nullable=False)
     price = Column(Numeric, nullable=False)
+
+class Logger(Base):
+    __tablename__ = "loggers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    level = Column(String, nullable=False)
+    message = Column(String, nullable=False)
+    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)

@@ -67,8 +67,8 @@ def create_game(db: Session, appid: int, game_data: list, regions: List[str]):
             data=game_data,
             updated_at=datetime.utcnow(),
         )
-        db.add(new_game)
-        created_games.append(new_game)
+    db.add(new_game)
+    created_games.append(new_game)
 
     db.commit()
 

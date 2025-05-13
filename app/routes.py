@@ -21,6 +21,11 @@ import logging
 
 logger = logging.getLogger("app.routes")
 
+def log_to_db(db: Session, level: str, message: str):
+    log_entry = models.Logger(level=level, message=message)
+    db.add(log_entry)
+    db.commit()
+
 @router.get("/game/{appid}")
 async def get_game(appid: int, db: Session = Depends(get_db)):
     steam_regions = ["US", "RU", "TR", "KZ"]
@@ -31,11 +36,13 @@ async def get_game(appid: int, db: Session = Depends(get_db)):
             game_data = get_info_across_regions(appid=appid, regions=steam_regions)
             if any(item.get("break") for item in game_data):
                 logger.warning(f"Game not found for appid {appid} in some regions")
+                log_to_db(db, "WARNING", f"Game not found for appid {appid} in some regions")
                 return JSONResponse(status_code=404, content={"error": "Game not found"})
             crud.update_game(db, appid, game_data)
             return game_data
         except Exception as e:
             logger.error(f"Error updating game {appid}: {e}")
+            log_to_db(db, "ERROR", f"Error updating game {appid}: {e}")
             raise HTTPException(status_code=500, detail=str(e))
     elif db_game:
         if db_game.updated_at < datetime.utcnow() - timedelta(minutes=1):
@@ -43,11 +50,13 @@ async def get_game(appid: int, db: Session = Depends(get_db)):
                 game_data = get_info_across_regions(appid=appid, regions=steam_regions)
                 if any(item.get("break") for item in game_data):
                     logger.warning(f"Game not found for appid {appid} in some regions")
+                    log_to_db(db, "WARNING", f"Game not found for appid {appid} in some regions")
                     return JSONResponse(status_code=404, content={"error": "Game not found"})
                 crud.update_game(db, appid, game_data)
                 return game_data
             except Exception as e:
                 logger.error(f"Error updating game {appid}: {e}")
+                log_to_db(db, "ERROR", f"Error updating game {appid}: {e}")
                 raise HTTPException(status_code=500, detail=str(e))
         return db_game.data
     else:
@@ -55,11 +64,13 @@ async def get_game(appid: int, db: Session = Depends(get_db)):
             game_data = get_info_across_regions(appid=appid, regions=steam_regions)
             if any(item.get("break") for item in game_data):
                 logger.warning(f"Game not found for appid {appid} in some regions")
+                log_to_db(db, "WARNING", f"Game not found for appid {appid} in some regions")
                 return JSONResponse(status_code=404, content={"error": "Game not found"})
             crud.create_game(db, appid, game_data, steam_regions)
             return game_data
         except Exception as e:
             logger.error(f"Error creating game {appid}: {e}")
+            log_to_db(db, "ERROR", f"Error creating game {appid}: {e}")
             raise HTTPException(status_code=500, detail=str(e))
 
 """@router.get("/game/{appid}/regions")
