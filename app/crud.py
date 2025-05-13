@@ -1,47 +1,50 @@
 from sqlalchemy.orm import Session
 from app import models, schemas
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List
 from app.models import Game
+
 def get_game_by_appid(db: Session, appid: int):
+    """
+    Получить игру из базы данных по её appid.
+    Возвращает объект игры или None, если игра не найдена.
+    """
     return db.query(models.Game).filter(models.Game.appid == appid).first()
 
+def get_game_by_appid_and_region(db: Session, appid: int, regions: List[str] = ["ru"]):
+    """
+    Проверить наличие игры в базе данных для указанных регионов.
+    Возвращает объект игры, если данные по всем регионам есть.
+    Возвращает пустой список, если игра отсутствует.
+    Возвращает строку "True", если игра есть, но не для всех регионов.
+    """
+    game = get_game_by_appid(db, appid)
+    if not game:
+        return []
 
-#Проверка на наличие игры в базе данных  по все регионам
+    data_row = game.data  # это jsonb словарь
+    data = data_row if isinstance(data_row, list) else [data_row]
+    e_flag = "False"
+    for region in regions:
+        flag = False
+        for i in data:
+            if i['region'] == region:
+                e_flag = "True"
+                flag = True
+                break
 
-def get_game_by_appid_and_region( 
-        db: Session, 
-        appid: int, 
-        regions: List[str] = ["ru"] 
-        ): 
-        game = db.query(Game).filter(Game.appid == appid).first()
-        if not game:
-            return []  
-
-        data_row = game.data  # это jsonb словарь
-        data = data_row if isinstance(data_row, list) else [data_row]
-        e_flag = "False"
-        print("DATA VAR = ", data, "\n\n\n")
-        for region in regions:
-            flag = False
-            for i in data:
-                if i['region'] == region:
-                    e_flag = "True"
-                    flag = True
-                    break
-            
-
-            if not flag:
-                if e_flag == "True":
-                    print("Нашел  хоть ОДИН регион для игры с id: ", appid)
-                    return e_flag  # если игры нет в базе данных по региону
-                print("Не нашел всех регионов для игры с id: ", appid)
-                return []  # если игры нет в базе данных по региону
-        print("Нашел все регионы для игры с id: ", appid)    
-        return game
-
+        if not flag:
+            if e_flag == "True":
+                return e_flag  # если игры нет в базе данных по региону
+            return []  # если игры нет в базе данных по региону
+    return game
 
 def update_game(db: Session, appid: int, game_data: dict):
+    """
+    Обновить данные игры в базе по appid.
+    Обновляет поле data и время обновления.
+    Возвращает обновлённый объект игры.
+    """
     db_game = get_game_by_appid(db, appid)
     if db_game:
         db_game.data = game_data
@@ -51,10 +54,11 @@ def update_game(db: Session, appid: int, game_data: dict):
         return db_game
     return None
 
-# Updated create_or_update_game function
-def create_game(db: Session, appid: int, game_data: list, regions: list[str]):#dict?
-
-    #Для множества регионов
+def create_game(db: Session, appid: int, game_data: list, regions: List[str]):
+    """
+    Создать новые записи игры в базе данных для каждого региона.
+    Возвращает список созданных объектов игры.
+    """
     created_games = []
 
     for region in regions:
@@ -62,10 +66,9 @@ def create_game(db: Session, appid: int, game_data: list, regions: list[str]):#d
             appid=appid,
             data=game_data,
             updated_at=datetime.utcnow(),
-            #region=region
         )
-    db.add(new_game)
-    created_games.append(new_game)
+        db.add(new_game)
+        created_games.append(new_game)
 
     db.commit()
 
