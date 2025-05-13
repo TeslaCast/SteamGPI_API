@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Инфо об игре</title>
+  <style>
+    body {
+      background-color: #1b1f23;
+      color: #d4d7dc;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #c7cacf;
+      text-align: center;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 1rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    }
+
+    .table {
+      display: grid;
+      grid-template-columns: 1fr 2fr 2fr 1fr;
+      gap: 0.5rem;
+      background-color: #2c2f33;
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .cell {
+      padding: 0.75rem 1rem;
+      background-color: #36393f;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .cell.header {
+      background-color: #23272a;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #b9bbbe;
+      letter-spacing: 0.05em;
+    }
+
+    /* Чередование строк */
+    .row:nth-child(even) .cell {
+      background-color: #3a3e45;
+    }
+  </style>
+</head>
+<body>
+  <h1>Risk of Rain 2</h1>
+  <div class="table">
+    <!-- Header -->
+    <div class="cell header">Регион</div>
+    <div class="cell header">Цена без скидки</div>
+    <div class="cell header">Цена со скидкой</div>
+    <div class="cell header">Скидка</div>
+
+    <!-- Row 1 -->
+    <div class="cell">RU</div>
+    <div class="cell">N/A</div>
+    <div class="cell">N/A</div>
+    <div class="cell">0%</div>
+
+    <!-- Row 2 -->
+    <div class="cell">US</div>
+    <div class="cell">$24.99</div>
+    <div class="cell">$24.99</div>
+    <div class="cell">0%</div>
+
+    <!-- Row 3 -->
+    <div class="cell">TR</div>
+    <div class="cell">$12.49</div>
+    <div class="cell">$12.49</div>
+    <div class="cell">0%</div>
+
+    <!-- Row 4 -->
+    <div class="cell">KZ</div>
+    <div class="cell">3300 ₸</div>
+    <div class="cell">3300 ₸</div>
+    <div class="cell">0%</div>
+  </div>
+</body>
+</html>
