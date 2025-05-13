@@ -14,10 +14,19 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Base class for declarative models
 Base = declarative_base()
 
-# Function to get a session
+from sqlalchemy.exc import OperationalError
+import logging
+
+# Function to get a session with error handling
 def get_db():
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         yield db
+    except OperationalError as e:
+        logging.error(f"Database connection error: {e}")
+        # Можно здесь добавить логику повторных попыток или возврата ошибки
+        raise
     finally:
-        db.close()
+        if db:
+            db.close()

@@ -15,3 +15,46 @@ env/
 
 # Ignore IDE specific files
 .vscode/
+
+# Ignore Alembic migration versions (optional, if you don't want to track migrations)
+#migrations/versions/
+
+# Ignore Python egg-info
+*.egg-info/
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+
+# Ignore pytest cache
+.pytest_cache/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore bytecode cache
+__pycache__/
+
+# Ignore local environment files
+.env
+.env.*
+
+# Ignore pipenv files
+Pipfile.lock
+
+# Ignore mypy cache
+.mypy_cache/
+
+# Ignore pyre type checker
+.pyre/
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore steam-price-checker build files
+steam-price-checker/*.js
+steam-price-checker/*.png
+steam-price-checker/*.html
+steam-price-checker/*.css
+steam-price-checker/*.json
