@@ -59,6 +59,7 @@ def create_game(db: Session, appid: int, game_data: list, regions: List[str]):
     Создать новые записи игры в базе данных для каждого региона.
     Возвращает список созданных объектов игры.
     """
+    print("я зашел")
     created_games = []
 
     for region in regions:
@@ -67,12 +68,16 @@ def create_game(db: Session, appid: int, game_data: list, regions: List[str]):
             data=game_data,
             updated_at=datetime.utcnow(),
         )
-        db.add(new_game)
-        created_games.append(new_game)
+    print("добавляю")
+    db.add(new_game)
+    print("добавил")
+
+    created_games.append(new_game)
 
     db.commit()
 
     for game in created_games:
         db.refresh(game)
+        print("я вышел")
 
     return created_games

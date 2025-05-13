@@ -10,7 +10,7 @@ class Game(Base):
     updated_at = Column(DateTime, default=datetime.utcnow)
 
     __table_args__ = (
-        UniqueConstraint("appid", name="uix_appid"),
+        UniqueConstraint("appid", name="appid"),
     )
 
 class User(Base):
