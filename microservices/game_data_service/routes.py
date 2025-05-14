@@ -6,6 +6,7 @@ from microservices.game_data_service import crud, models
 from microservices.game_data_service.database import SessionLocal, engine, get_db
 import logging
 
+
 models.Base.metadata.create_all(bind=engine)
 
 router = APIRouter()
@@ -83,8 +84,9 @@ def create_game(appid: int = Body(...), game_data: List = Body(...), regions: Li
         logger.error(f"Error creating game {appid}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.put("/game/{appid}")
-def update_game(appid: int, game_data: List, db: Session = Depends(get_db)):
+def update_game(appid: int, game_data: List[dict] = Body(...), db: Session = Depends(get_db)):
     try:
         print(f"Начинаю обновление данных. На входе: {game_data}")
         updated_game = crud.update_game(db, appid, game_data)

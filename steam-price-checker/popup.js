@@ -23,6 +23,7 @@ function renderTable(gameData) {
   if (!Array.isArray(gameData) || gameData.length === 0) {
     document.getElementById("table-container").innerHTML = 
       '<div class="loading">❌ Нет данных для отображения</div>';
+    fetchData(getAppId);
     return;
   }
 
@@ -73,6 +74,7 @@ function renderTable(gameData) {
   if (!appid) {
     document.getElementById("table-container").innerHTML = 
       `<div class="loading">❌ Откройте страницу игры в Steam</div>`;
+    fetchData(getAppId);
     return;
   }
   

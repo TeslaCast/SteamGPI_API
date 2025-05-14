@@ -57,8 +57,9 @@ async def get_game(appid: int):
                     raise HTTPException(status_code=steam_response.status_code, detail="Game not found")
             elif response.status_code == 200:
                 print(f"В бд есть такая запись, выдаю пользователю: {response.json()}")
-                game_data = response.json()
-                updated_at_str = game_data['updated_at']
+                data = response.json()
+                game_data = data['data']
+                updated_at_str = data['updated_at']
                 print(f"Последнее обновление было: updated_at_str")
                 if updated_at_str:
                     updated_at = datetime.fromisoformat(updated_at_str)
@@ -70,8 +71,13 @@ async def get_game(appid: int):
                             print("Получил данные", type(steam_response.json()))
                             steam_data = steam_response.json()
                             print("Кидаю данные для обновления")
-                            update_response = await client.put(f"{GAME_DATA_SERVICE_URL}/game/{appid}", steam_data)
-                            print("В теории обновилось")
+                            print(type(steam_data))
+                            if not isinstance(steam_data, list):
+                                steam_data = [steam_data]
+                            print(type(steam_data))
+
+                            update_response = await client.put(f"{GAME_DATA_SERVICE_URL}/game/{appid}", json=steam_data)
+                            print(f"В теории обновилось: {update_response.status_code}")
                             if update_response.status_code not in (200, 204):
                                 logger.error(f"Failed to update game data for appid {appid} in Game Data Service")
                             return JSONResponse(content=steam_data)
