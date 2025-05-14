@@ -17,7 +17,17 @@ def get_db():
 
 @router.get("/game/{appid}")
 def get_game(appid: int, db: Session = Depends(get_db)):
-    game = crud.get_game_by_appid(db, appid)
-    if not game:
-        raise HTTPException(status_code=404, detail="Game not found")
-    return game.data
+    steam_regions = ["US", "RU", "TR", "KZ"]
+    print(f"Хочу найти игру: {appid}")
+    game = crud.get_game_by_appid_and_region(db, appid, steam_regions)
+
+    if game =="True":
+        print("Нашел игру, но не для всех регионов!")
+    elif game:
+        print("Игру нашел, возвращаю её")
+        return game.data
+    else:
+        print("Игра не найдена")
+        raise HTTPException(status_code=404, detail="Game not found")        
+    
+    
