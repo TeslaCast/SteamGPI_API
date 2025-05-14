@@ -9,6 +9,7 @@ def get_game_by_appid(db: Session, appid: int):
     Получить игру из базы данных по её appid.
     Возвращает объект игры или None, если игра не найдена.
     """
+    
     return db.query(models.Game).filter(models.Game.appid == appid).first()
 
 def get_game_by_appid_and_region(db: Session, appid: int, regions: List[str] = ["ru"]):
@@ -21,6 +22,8 @@ def get_game_by_appid_and_region(db: Session, appid: int, regions: List[str] = [
     game = get_game_by_appid(db, appid)
     if not game:
         return []
+    
+    print(f"\n\nВСЕ ЧТО Я НАШЕЛ В БД: {game}\n\n")
 
     data_row = game.data  # это jsonb словарь
     data = data_row if isinstance(data_row, list) else [data_row]
@@ -35,9 +38,12 @@ def get_game_by_appid_and_region(db: Session, appid: int, regions: List[str] = [
 
         if not flag:
             if e_flag == "True":
+                print("Нашел  хоть ОДИН регион для игры с id: ", appid)
                 return e_flag  # если игры нет в базе данных по региону
+            print("Не нашел всех регионов для игры с id: ", appid)
             return []  # если игры нет в базе данных по региону
-    return game
+        print("Нашел все регионы для игры с id: ", appid)    
+        return game
 
 def update_game(db: Session, appid: int, game_data: dict):
     """
@@ -71,7 +77,6 @@ def create_game(db: Session, appid: int, game_data: list, regions: List[str]):
     print("добавляю")
     db.add(new_game)
     print("добавил")
-
 
     created_games.append(new_game)
 

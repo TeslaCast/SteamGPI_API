@@ -4,15 +4,50 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from app import crud, models
 from app.database import get_db
-from app.steam import get_info_across_regions  # Update to use the new function
+from app.steam import get_info_across_regions  
 from datetime import datetime, timedelta
 
 router = APIRouter()
 
 @router.get("/doc")
 async def doc():
-    print(12312424)
-    return {"message": "This is a doc endpoint"}
+    """
+    Возвращает документацию API в формате JSON
+    """
+    return {
+        "project": "SteamGPI API",
+        "description": "Сервис для мониторинга цен и доступности игр в Steam по регионам.",
+        "base_url": "https://store.steampowered.com/api/appdetails",
+        "endpoints": [
+            {
+                "path": "/game/{appid}",
+                "method": "GET",
+                "description": "Получение информации об игре в одном регионе",
+                "parameters": {
+                    "appid": "integer, обязательно - Уникальный идентификатор игры в Steam",
+                    "region": "string, опционально - Код региона (например, ru, us, tr)",
+                    "language": "string, опционально - Язык описания игры (например, en, ru)"
+                },
+                "response": "JSON-объект с информацией о продукте"
+            },
+            {
+                "path": "/game/{appid}/regions",
+                "method": "GET",
+                "description": "Получение информации об игре в нескольких регионах",
+                "parameters": {
+                    "appid": "integer, обязательно - Уникальный идентификатор игры в Steam",
+                    "regions": "массив строк, обязательно - Список кодов регионов (например, ru,us,eu,tr)"
+                },
+                "response": "JSON-массив с информацией по каждому региону"
+            }
+        ],
+        "error_handling": {
+            "400": "Bad Request – Неверный запрос (например, отсутствует appid)",
+            "404": "Not Found – Игра не найдена",
+            "500": "Internal Server Error – Внутренняя ошибка сервера"
+        },
+        "rate_limits": "API ограничено 60 запросами в минуту на один IP-адрес"
+    }
 
 from fastapi import HTTPException
 from fastapi.responses import JSONResponse
@@ -72,21 +107,3 @@ async def get_game(appid: int, db: Session = Depends(get_db)):
             logger.error(f"Error creating game {appid}: {e}")
             log_to_db(db, "ERROR", f"Error creating game {appid}: {e}")
             raise HTTPException(status_code=500, detail=str(e))
-
-"""@router.get("/game/{appid}/regions")
-async def get_game_multiple_regions(
-    appid: int,
-    regions: List[str] = Query(..., description="Список регионов, например: ru,us,tr"),
-    db: Session = Depends(get_db)
-):
-    # Collect data for all specified regions
-    all_data = get_info_across_regions(appid, regions)
-    
-    results = []
-    for game_data in all_data:
-        if game_data.get("break"):
-            results.append({"region": game_data["region"], "error": "Game not found"})
-        else:
-            crud.create_or_update_game(db, appid, game_data)
-            results.append({"region": game_data["region"], "data": game_data})
-    return results"""

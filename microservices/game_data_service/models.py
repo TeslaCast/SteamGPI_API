@@ -1,14 +1,15 @@
-from sqlalchemy import Column, Integer, String, JSON, DateTime, UniqueConstraint, ForeignKey, Numeric
-from app.database import Base
+from sqlalchemy import Column, Integer, String, JSON, DateTime, ForeignKey, Numeric
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+
+Base = declarative_base()
 
 class Game(Base):
     __tablename__ = "games"
 
-    appid = Column(Integer, primary_key=True, index=True)  
-    data = Column(JSON)  
+    appid = Column(Integer, primary_key=True, index=True)
+    data = Column(JSON)
     updated_at = Column(DateTime, default=datetime.utcnow)
-
 
 class User(Base):
     __tablename__ = "users"
@@ -24,11 +25,3 @@ class Alert(Base):
     userid = Column(Integer, ForeignKey("users.userid"), nullable=False)
     appid = Column(Integer, ForeignKey("games.appid"), nullable=False)
     price = Column(Numeric, nullable=False)
-
-class Logger(Base):
-    __tablename__ = "loggers"
-
-    id = Column(Integer, primary_key=True, index=True)
-    level = Column(String, nullable=False)
-    message = Column(String, nullable=False)
-    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
