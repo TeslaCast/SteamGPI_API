@@ -8,19 +8,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Разрешённые источники (можно ограничить для фронта)
 origins = [
-    "*",  # В продакшене заменить на URL расширения или фронта
+    "*",  
 ]
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # или ["chrome-extension://<your-extension-id>"]
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Подключаем маршруты
 app.include_router(router)

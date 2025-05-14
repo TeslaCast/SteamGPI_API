@@ -1,6 +1,8 @@
+from fastapi import APIRouter, HTTPException
+from typing import List, Dict, Any
 import requests
-from typing import List, Dict, Any, Union
-from app.schemas import GameResponse  
+
+router = APIRouter()
 
 STEAM_API_URL = "https://store.steampowered.com/api/appdetails"
 
@@ -46,11 +48,10 @@ def get_game_info(appid: int, region: str = "ru", language: str = "en") -> Dict[
             "error": str(e)
         }
 
-def get_info_across_regions(appid: int, regions: List[str]) -> List[Dict[str, Any]]:
+@router.get("/game/{appid}")
+def get_info_across_regions(appid: int, regions: List[str] = ["US", "RU", "TR", "KZ"]) -> List[Dict[str, Any]]:
     all_data = []
     for region in regions:
-        print(f"Fetching data from API for appid: {appid}, region: {region}")
         info = get_game_info(appid, region)
-        print(f"INFO ABOUT GAME {appid}: ",info,"\n\n\n")
         all_data.append(info)
     return all_data

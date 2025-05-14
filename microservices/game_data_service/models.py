@@ -1,17 +1,15 @@
-from sqlalchemy import Column, Integer, String, JSON, DateTime, UniqueConstraint, ForeignKey, Numeric
-from app.database import Base
+from sqlalchemy import Column, Integer, String, JSON, DateTime, ForeignKey, Numeric
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
+
+Base = declarative_base()
 
 class Game(Base):
     __tablename__ = "games"
 
-    appid = Column(Integer, primary_key=True, index=True)  
-    data = Column(JSON)  
+    appid = Column(Integer, primary_key=True, index=True)
+    data = Column(JSON)
     updated_at = Column(DateTime, default=datetime.utcnow)
-
-    __table_args__ = (
-        UniqueConstraint("appid", name="appid"),
-    )
 
 class User(Base):
     __tablename__ = "users"
