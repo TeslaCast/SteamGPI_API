@@ -84,9 +84,11 @@ def create_game(appid: int = Body(...), game_data: List = Body(...), regions: Li
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.put("/game/{appid}")
-def update_game(appid: int, game_data: List = Body(...), db: Session = Depends(get_db)):
+def update_game(appid: int, game_data: List, db: Session = Depends(get_db)):
     try:
+        print(f"Начинаю обновление данных. На входе: {game_data}")
         updated_game = crud.update_game(db, appid, game_data)
+        print(f"Закончил обновление данных: на выходе {updated_game}")
         if not updated_game:
             raise HTTPException(status_code=404, detail="Game not found")
         return updated_game

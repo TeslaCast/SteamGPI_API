@@ -24,7 +24,7 @@ def get_game_by_appid_and_region(db: Session, appid: int, regions: List[str] = [
         return []
     
     print(f"\n\nВСЕ ЧТО Я НАШЕЛ В БД: {game}\n\n")
-    
+
     data_row = game.data  # это jsonb словарь
     data = data_row if isinstance(data_row, list) else [data_row]
     e_flag = "False"

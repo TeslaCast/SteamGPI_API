@@ -34,6 +34,7 @@ async def get_game(appid: int):
         try:
             print("Пробую запрос к бд")
             response = await client.get(f"{GAME_DATA_SERVICE_URL}/game/{appid}")
+            print(type(response))
             print(f"Получил: {response} response status_code = {response.status_code}")
             if response.status_code == 404:
                 print("Не нашел игру в бд")
@@ -57,17 +58,20 @@ async def get_game(appid: int):
             elif response.status_code == 200:
                 print(f"В бд есть такая запись, выдаю пользователю: {response.json()}")
                 game_data = response.json()
-                updated_at_str = game_data.get("updated_at")
+                updated_at_str = game_data['updated_at']
+                print(f"Последнее обновление было: updated_at_str")
                 if updated_at_str:
                     updated_at = datetime.fromisoformat(updated_at_str)
                     if datetime.utcnow() - updated_at > timedelta(minutes=1):
-                        print("Данные устарели, обновляю")
+                        print("Данные устарели, обновляю: ",datetime.utcnow() - updated_at)
                         steam_response = await client.get(f"{STEAM_INTEGRATION_SERVICE_URL}/game/{appid}")
+                        print(f"Получаю новые данные: {steam_response}\n{steam_response.json()}")
                         if steam_response.status_code == 200:
+                            print("Получил данные", type(steam_response.json()))
                             steam_data = steam_response.json()
-                            update_response = await client.put(f"{GAME_DATA_SERVICE_URL}/game/{appid}", json={
-                                "game_data": steam_data
-                            })
+                            print("Кидаю данные для обновления")
+                            update_response = await client.put(f"{GAME_DATA_SERVICE_URL}/game/{appid}", steam_data)
+                            print("В теории обновилось")
                             if update_response.status_code not in (200, 204):
                                 logger.error(f"Failed to update game data for appid {appid} in Game Data Service")
                             return JSONResponse(content=steam_data)

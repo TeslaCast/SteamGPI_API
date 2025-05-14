@@ -50,8 +50,11 @@ def get_game_info(appid: int, region: str = "ru", language: str = "en") -> Dict[
 
 @router.get("/game/{appid}")
 def get_info_across_regions(appid: int, regions: List[str] = ["US", "RU", "TR", "KZ"]) -> List[Dict[str, Any]]:
+    print("Готов парсить данные")
     all_data = []
     for region in regions:
         info = get_game_info(appid, region)
         all_data.append(info)
+        print("\n\n\nТекущие данные ",all_data)
+    print(f"Все данные получены, возвращаю: {all_data}")
     return all_data
