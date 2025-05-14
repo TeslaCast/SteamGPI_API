@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "Steam Game Price Viewer",
+  "version": "1.0",
+  "description": "Просмотр цен на игру в разных регионах Steam.",
+  "permissions": [
+    "activeTab",
+    "http://localhost:8000/"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "48": "icon.png"
+    }
+  },
+  "icons": {
+    "48": "icon.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://store.steampowered.com/app/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

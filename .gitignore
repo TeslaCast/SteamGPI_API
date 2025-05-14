@@ -58,3 +58,5 @@ steam-price-checker/*.png
 steam-price-checker/*.html
 steam-price-checker/*.css
 steam-price-checker/*.json
+
+node_modules/

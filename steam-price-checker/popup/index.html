@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Инфо об игре</title>
+  <link rel="stylesheet" href="popup.css" />
+  <style>
+    .auth-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: #b9bbbe;
+    }
+
+    .auth-container button {
+      background-color: #7289da;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .auth-container button:hover {
+      background-color: #5b6eae;
+    }
+
+    #logout {
+      background-color: #4f545c;
+    }
+
+    #logout:hover {
+      background-color: #3a3f45;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="auth-container">
+      <span id="user-info">Проверка статуса...</span>
+      <div>
+        <button id="login">Войти с Google</button>
+        <button id="logout" style="display:none;">Выйти</button>
+      </div>
+    </div>
+
+    <h1 id="game-title">Загрузка...</h1>
+    <div id="table-container">
+      <div class="loading">⏳ Получаем данные об игре...</div>
+    </div>
+  </div>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
