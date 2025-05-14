@@ -72,6 +72,7 @@ def create_game(db: Session, appid: int, game_data: list, regions: List[str]):
     db.add(new_game)
     print("добавил")
 
+
     created_games.append(new_game)
 
     db.commit()
