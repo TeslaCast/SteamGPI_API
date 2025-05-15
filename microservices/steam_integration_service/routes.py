@@ -34,8 +34,9 @@ def get_game_info(appid: int, region: str = "ru", language: str = "en") -> Dict[
             "name": game_data.get("name", "Unknown"),
             "is_free": game_data.get("is_free", False),
             "currency": price_info.get("currency") if price_info else None,
-            "initial_price": price_info.get("initial") / 100 if price_info else None,
-            "final_price": price_info.get("final") / 100 if price_info else None,
+            "initial_price": price_info.get("initial") / 100 if price_info else 0,
+            "final_price": price_info.get("final") / 100 if price_info else 0,
+            "discount_percent": price_info.get("discount_percent") if price_info else 0,
             "release_date": game_data.get("release_date", {}).get("date")
         }
         return result

@@ -60,9 +60,9 @@ async def get_game(appid: int):
                 data = response.json()
                 game_data = data['data']
                 updated_at_str = data['updated_at']
-                print(f"Последнее обновление было: updated_at_str")
+                print(f"Последнее обновление было: {datetime.fromisoformat(updated_at_str)  + timedelta(hours=3)}")
                 if updated_at_str:
-                    updated_at = datetime.fromisoformat(updated_at_str)
+                    updated_at = datetime.fromisoformat(updated_at_str) 
                     if datetime.utcnow() - updated_at > timedelta(minutes=1):
                         print("Данные устарели, обновляю: ",datetime.utcnow() - updated_at)
                         steam_response = await client.get(f"{STEAM_INTEGRATION_SERVICE_URL}/game/{appid}")

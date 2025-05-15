@@ -1,15 +1,8 @@
 // popup.js
 // Этот скрипт отвечает за логику всплывающего окна расширения: получение appid, запрос данных и отображение таблицы с ценами.
 
-// Кешируем appid, чтобы не запрашивать его повторно у background.js
-let cachedAppId = null;
-
-// Функция для получения appid из background.js или из кеша
+// Функция для получения appid из background.js 
 async function getAppId() {
-  if (cachedAppId !== null) {
-    console.log("Popup: returning cached appid", cachedAppId);
-    return cachedAppId;
-  }
   console.log("Popup: calling getAppId");
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({ type: "getAppId" }, (response) => {
@@ -27,8 +20,8 @@ async function fetchData(appid) {
     const res = await fetch(url);
     if (!res.ok) throw new Error("Ошибка при получении данных");
     // После успешного запроса очищаем appid и кеш
-    chrome.runtime.sendMessage({ type: "clearAppId" });
-    cachedAppId = null;
+    //chrome.runtime.sendMessage({ type: "clearAppId" });
+    //cachedAppId = null;
     return await res.json();
   } catch (err) {
     document.getElementById("table-container").innerHTML = 
@@ -49,15 +42,22 @@ function renderTable(gameData) {
     return;
   }
 
-  const formatPrice = (price, currency) => {
-    if (price === null || price === undefined) return 'N/A';
-    const num = parseFloat(price);
-    if (isNaN(num)) return 'N/A';
-    
-    if (currency === 'USD' || currency === 'EUR') {
-      return `${currency} ${num.toFixed(2)}`;
+  const formatPrice = (price, currency, is_free) => {
+
+    if (price !== 0) {
+      const num = parseFloat(price);
+      if (isNaN(num)) return 'N/A';
+      if (currency === 'USD' || currency === 'EUR') {
+        return `${currency} ${num.toFixed(2)}`;
+      }
+      return `${num.toFixed(2)} ${currency}`;
+    } else {
+      if (is_free === true) {
+        return '0';
+      } else {
+        return 'Недоступно';
+      }
     }
-    return `${num.toFixed(2)} ${currency}`;
   };
 
   const gameName = gameData[0]?.name || "Неизвестная игра";
@@ -66,8 +66,8 @@ function renderTable(gameData) {
   const rows = gameData.map(region => `
     <tr>
       <td>${region.region}</td>
-      <td class="price">${formatPrice(region.initial_price, region.currency)}</td>
-      <td class="price">${formatPrice(region.final_price, region.currency)}</td>
+      <td class="price">${formatPrice(region.initial_price, region.currency, region.is_free)}</td>
+      <td class="price">${formatPrice(region.final_price, region.currency, region.is_free)}</td>
       <td class="discount">${region.discount_percent ? region.discount_percent + '%' : '0%'}</td>
     </tr>
   `).join("");
@@ -78,7 +78,7 @@ function renderTable(gameData) {
         <thead>
           <tr>
             <th>Регион</th>
-            <th>Обычная цена</th>
+            <th>Цена</th>
             <th>Цена со скидкой</th>
             <th>Скидка</th>
           </tr>
