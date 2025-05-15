@@ -20,13 +20,13 @@ async function fetchFromAPI(appid) {
 function formatPrice(price, currency, is_free) {
   if (price !== 0) {
     const num = parseFloat(price);
-    if (isNaN(num)) return 'N/A';
+    if (isNaN(num)) return 'Недоступно';
     if (currency === 'USD' || currency === 'EUR') {
       return `${currency} ${num.toFixed(2)}`;
     }
     return `${num.toFixed(2)} ${currency}`;
   } else {
-    return is_free === true ? '0' : 'Недоступно';
+    return is_free === true ? 'Бесплатно' : 'Недоступно';
   }
 }
 
