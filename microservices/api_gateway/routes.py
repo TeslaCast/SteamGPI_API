@@ -30,7 +30,8 @@ async def doc():
 
 @router.get("/game/{appid}")
 async def get_game(appid: int):
-    async with httpx.AsyncClient() as client:
+    timeout = httpx.Timeout(20.0, connect=10.0)
+    async with httpx.AsyncClient(timeout=timeout) as client:
         try:
             print("Пробую запрос к бд")
             response = await client.get(f"{GAME_DATA_SERVICE_URL}/game/{appid}")
