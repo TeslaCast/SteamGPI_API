@@ -57,5 +57,6 @@ def get_info_across_regions(appid: int, regions: List[str] = ["US", "RU", "TR", 
         info = get_game_info(appid, region)
         all_data.append(info)
         #print("\n\n\nТекущие данные ",all_data)
-    print(f"Все данные получены, возвращаю: {all_data}")
+    #print(f"Все данные получены, возвращаю: {all_data}")
+    print("Все данные получены, возвращаю: ")
     return all_data
