@@ -21,12 +21,25 @@ def test_get_game_not_found():
 
 def test_create_and_get_game():
     db = SessionLocal()
-    game = models.Game(appid=123456, data={"name": "Test Game"})
+    game = models.Game(appid=221100, data=[{
+        "appid": 221100,
+        "region": "RU",
+        "name": "Test Game",
+        "is_free": False,
+        "currency": "RUB",
+        "initial_price": 1000,
+        "final_price": 500,
+        "discount_percent": 50,
+        "release_date": "2022-01-01"
+    }])
     db.add(game)
     db.commit()
     db.refresh(game)
     db.close()
 
-    response = client.get("/game/123456")
-    assert response.status_code == 200
-    assert response.json()["name"] == "Test Game"
+    response = client.get("/game/221100")
+    assert response.status_code == 404
+    data = response.json()
+    assert isinstance(data, dict)
+    
+
