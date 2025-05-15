@@ -3,7 +3,7 @@
   "name": "Steam Game Price Viewer",
   "version": "1.0",
   "description": "Просмотр цен на игру в разных регионах Steam.",
-  "permissions": ["activeTab", "http://localhost:8000/"],
+  "permissions": ["activeTab", "http://localhost:8000/", "storage"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
