@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Any
 import requests
-
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 router = APIRouter()
 
 STEAM_API_URL = "https://store.steampowered.com/api/appdetails"
