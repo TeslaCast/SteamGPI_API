@@ -44,7 +44,7 @@ async def get_game(appid: int):
                 #print(f"Получил: {steam_response}\nresponse status_code = {steam_response.status_code}")
                 if steam_response.status_code == 200:
                     steam_data = steam_response.json()
-                    #print(f"Вот что получает пользователь: {steam_data}")
+                    print(f"Вот что получает пользователь: {steam_data}")
                     create_response = await client.post(f"{GAME_DATA_SERVICE_URL}/game", json={
                         "appid": appid,
                         "game_data": steam_data,
@@ -99,5 +99,5 @@ async def get_game(appid: int):
                 raise HTTPException(status_code=response.status_code, detail="Error fetching game data")
         except Exception as e:
             logger.error(f"Error in API Gateway fetching game {appid}: {e}")
-            #print(f"Блядь, все все сломалось!!! {e}")
+            #print(f"Все все сломалось!!! {e}")
             raise HTTPException(status_code=500, detail=str(e))
