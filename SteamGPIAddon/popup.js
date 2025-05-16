@@ -83,7 +83,7 @@ async function loadAndRender(appid) {
   const cache = await browser.storage.local.get(cacheKey);
   const now = Date.now();
 
-  if (cache[cacheKey] && now - cache[cacheKey].timestamp < 1_000) {
+  if (cache[cacheKey] && now - cache[cacheKey].timestamp < 60_000) {
     // Используем кэш
     renderTable(cache[cacheKey].data);
   } else {

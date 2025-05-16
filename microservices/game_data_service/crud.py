@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-from app import models, schemas
+import models
 from datetime import datetime
 from typing import List
-from app.models import Game
+from models import Game
 
 def get_game_by_appid(db: Session, appid: int):
     """

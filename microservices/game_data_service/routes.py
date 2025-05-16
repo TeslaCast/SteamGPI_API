@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends, Body
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from typing import List
-from microservices.game_data_service import crud, models
-from microservices.game_data_service.database import SessionLocal, engine, get_db
+import crud, models
+from database import SessionLocal, engine, get_db
 import logging
 
 

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from microservices.game_data_service.routes import router
+from routes import router
 
 app = FastAPI(
     title="Game Data Service",

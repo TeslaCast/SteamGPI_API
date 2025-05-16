@@ -1,0 +1,58 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_DB: SteamGPI_API
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - steam_net
+
+  game_data_service:
+    build: ./microservices/game_data_service
+    container_name: game_data_service
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: SteamGPI_API
+      DB_USER: postgres
+      DB_PASS: postgres
+    ports:
+      - "8001:8000"
+    networks:
+      - steam_net
+
+  steam_integration_service:
+    build: ./microservices/steam_integration_service
+    container_name: steam_integration_service
+    ports:
+      - "8002:8000"
+    networks:
+      - steam_net
+
+  api_gateway:
+    build: ./microservices/api_gateway
+    container_name: api_gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - game_data_service
+      - steam_integration_service
+    networks:
+      - steam_net
+
+volumes:
+  postgres_data:
+
+networks:
+  steam_net:
+    driver: bridge

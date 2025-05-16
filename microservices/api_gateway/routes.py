@@ -7,8 +7,9 @@ from datetime import datetime, timedelta
 router = APIRouter()
 logger = logging.getLogger("api_gateway.routes")
 
-GAME_DATA_SERVICE_URL = "http://localhost:8001"
-STEAM_INTEGRATION_SERVICE_URL = "http://localhost:8002"
+GAME_DATA_SERVICE_URL = "http://game_data_service:8000"
+STEAM_INTEGRATION_SERVICE_URL = "http://steam_integration_service:8000"
+
 
 @router.get("/doc")
 async def doc():
